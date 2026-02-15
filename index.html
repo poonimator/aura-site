@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA — THE 1000-YEAR IDEA</title>
+<link rel="icon" type="image/png" href="Final/favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #000000;
+    --white: #ffffff;
+    --grey: #888888;
+    --dark-grey: #1a1a1a;
+    --accent: #c8ff00;
+    --heading: 'Space Grotesk', -apple-system, sans-serif;
+    --mono: 'Space Mono', 'Courier New', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--mono);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    font-size: 14px;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--black);
+  }
+
+  /* ─── FIXED DECLARATION BAR ─── */
+  .declaration-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--black);
+    padding: 12px 24px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    border-bottom: 2px solid var(--white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-transform: uppercase;
+  }
+
+  .declaration-bar .dec-left {
+    opacity: 0.5;
+  }
+
+  .declaration-bar .dec-right {
+    opacity: 0.3;
+    font-size: 9px;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: var(--black);
+    position: relative;
+    border-bottom: 2px solid var(--white);
+    padding-top: 36px;
+    overflow: hidden;
+  }
+
+  .hero-bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    filter: brightness(0.65);
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .hero-wordmark {
+    font-family: var(--heading);
+    font-size: clamp(6rem, 22vw, 28rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: var(--white);
+    line-height: 0.85;
+    text-transform: uppercase;
+    transition: transform 0.1s ease;
+    will-change: transform, opacity;
+    cursor: default;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-wordmark img {
+    display: block;
+    width: min(105vw, 1020px);
+    height: auto;
+  }
+
+  .hero-wordmark:hover {
+    animation: glitch 0.4s ease;
+  }
+
+  @keyframes glitch {
+    0% { text-shadow: 2px 0 #c8ff00, -2px 0 #ff00ff; }
+    20% { text-shadow: -2px 0 #c8ff00, 2px 0 #00ffff; }
+    40% { text-shadow: 2px -2px #ff00ff, -2px 2px #c8ff00; }
+    60% { text-shadow: -1px 0 #00ffff, 1px 0 #ff00ff; }
+    80% { text-shadow: 1px 1px #c8ff00, -1px -1px #00ffff; }
+    100% { text-shadow: none; }
+  }
+
+  .hero-sub {
+    font-family: var(--mono);
+    font-size: 14px;
+    letter-spacing: 1.2em;
+    color: var(--white);
+    opacity: 1;
+    margin-top: 3rem;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 2;
+    animation: none;
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+  }
+
+  .hero-marker {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 1;
+    z-index: 2;
+    color: var(--white);
+  }
+
+  /* ─── MANIFESTO SECTION ─── */
+  .manifesto {
+    background: var(--black);
+    border-bottom: 2px solid var(--white);
+    padding: 12vh 6vw;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .manifesto-text {
+    font-family: var(--heading);
+    font-size: clamp(1.8rem, 4vw, 3.6rem);
+    font-weight: 300;
+    line-height: 1.35;
+    max-width: 900px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .manifesto-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .manifesto-text p {
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .manifesto-text p.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .manifesto-text p:nth-child(2) { transition-delay: 0.3s; }
+
+  .manifesto-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  .manifesto-text em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.3;
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .section-label::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 1.2s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .section-label.visible::after { width: 100%; }
+
+  .section-label-light {
+    background: var(--white);
+    color: var(--black);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .media-divider {
+    position: relative;
+    width: min(100%, 1920px);
+    aspect-ratio: 16 / 9;
+    height: auto;
+    margin: 0 auto;
+    border-bottom: 2px solid var(--black);
+    overflow: hidden;
+    background: var(--black);
+  }
+
+  .media-divider video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    transform: none;
+  }
+
+  /* ─── NATURAL INTELLIGENCE ─── */
+  .ni-section {
+    background: var(--white);
+    color: var(--black);
+    border-bottom: 2px solid var(--black);
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ni-left {
+    padding: 12vh 6vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-right: 2px solid var(--black);
+  }
+
+  .ni-title-reveal {
+    position: relative;
+    min-height: 3em;
+  }
+
+  .ni-title-reveal p {
+    display: none;
+    font-family: var(--heading);
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    font-weight: 700;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+  }
+
+  .ni-title-reveal p span {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(2px);
+    transition: opacity 0.15s ease-out, filter 0.35s ease-out, transform 0.3s ease-out;
+    display: inline-block;
+  }
+
+  .ni-title-reveal p span.ch-on {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+
+  .ni-right {
+    padding: 12vh 6vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .ni-capabilities {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8vh 0;
+  }
+
+  .ni-capabilities li {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+
+  .ni-capabilities li:hover {
+    padding-left: 1em;
+    color: rgba(200,255,0,1);
+    background: rgba(200,255,0,0.04);
+  }
+
+  .ni-capabilities li:first-child {
+    border-top: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .ni-capabilities li .cap-num {
+    opacity: 0.2;
+    margin-right: 2em;
+    font-size: 9px;
+  }
+
+  .ni-declaration {
+    font-family: var(--heading);
+    font-size: clamp(1.2rem, 2vw, 1.8rem);
+    font-weight: 400;
+    line-height: 1.5;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .ni-declaration.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ni-declaration .highlight {
+    background: var(--black);
+    color: var(--accent);
+    padding: 2px 8px;
+    display: inline;
+    animation: accentPulse 3s ease-in-out infinite;
+  }
+
+  @keyframes accentPulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(200,255,0,0); }
+    50% { box-shadow: 0 0 20px rgba(200,255,0,0.15); }
+  }
+
+  /* ─── PHILOSOPHY BREAK ─── */
+  .philosophy {
+    background: var(--black);
+    color: var(--white);
+    border-bottom: 2px solid var(--white);
+    padding: 14vh 6vw;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .philosophy-text {
+    font-family: var(--heading);
+    font-size: clamp(1.4rem, 3vw, 2.6rem);
+    font-weight: 300;
+    line-height: 1.5;
+    max-width: 700px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .philosophy-text.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ─── LOCATIONS ─── */
+  .locations {
+    background: var(--black);
+    color: var(--white);
+    border-bottom: 2px solid var(--white);
+  }
+
+  .locations-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .location-card {
+    border-right: 2px solid var(--white);
+    padding: 6vh 3vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 65vh;
+    position: relative;
+    transition: background 0.5s ease;
+    overflow: hidden;
+  }
+
+  .location-card:hover {
+    background: rgba(200,255,0,0.03);
+  }
+
+  .location-card:hover .loc-name {
+    color: var(--accent);
+    transition: color 0.4s ease;
+  }
+
+  .location-card:last-child {
+    border-right: none;
+  }
+
+  .loc-image {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.25;
+    transition: opacity 0.6s ease, transform 8s ease;
+    transform: scale(1.05);
+  }
+
+  .location-card:hover .loc-image {
+    opacity: 0.4;
+    transform: scale(1.0);
+  }
+
+  .location-card > div:not(.loc-image) {
+    position: relative;
+    z-index: 2;
+  }
+
+  .location-card .loc-wordmark {
+    font-family: var(--heading);
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    text-transform: uppercase;
+    opacity: 0.2;
+    margin-bottom: 3vh;
+  }
+
+  .location-card .loc-name {
+    font-family: var(--heading);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    transition: color 0.4s ease;
+  }
+
+  .location-card .loc-region {
+    font-family: var(--mono);
+    font-size: 11px;
+    opacity: 0.4;
+    letter-spacing: 0.05em;
+  }
+
+  .location-card .loc-provocation {
+    font-family: var(--mono);
+    font-size: 10px;
+    opacity: 0.45;
+    margin-top: 1.5rem;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    max-width: 280px;
+    transition: opacity 0.4s ease;
+  }
+
+  .location-card:hover .loc-provocation {
+    opacity: 0.8;
+  }
+
+  .loc-bottom {
+    margin-top: auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .location-card .loc-coords {
+    font-family: var(--mono);
+    font-size: 10px;
+    opacity: 0.25;
+    margin-bottom: 2vh;
+    letter-spacing: 0.02em;
+  }
+
+  .location-card .loc-data {
+    font-family: var(--mono);
+    font-size: 10px;
+    line-height: 2.2;
+    opacity: 0.35;
+  }
+
+  .location-card .loc-data span {
+    display: block;
+  }
+
+  .location-card .loc-temp {
+    font-family: var(--heading);
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    margin-top: 3vh;
+    letter-spacing: -0.02em;
+  }
+
+  .loc-temp .temp-dash {
+    opacity: 0.3;
+    margin: 0 0.3em;
+  }
+
+  /* ─── THREE PILLARS ─── */
+  .pillars {
+    background: var(--white);
+    color: var(--black);
+    border-bottom: 2px solid var(--black);
+  }
+
+  .pillar {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    border-bottom: 2px solid var(--black);
+    min-height: 40vh;
+    transition: all 0.4s ease;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94), background 0.4s ease;
+  }
+
+  .pillar.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .pillar:hover {
+    background: rgba(0,0,0,0.02);
+  }
+
+  .pillar:hover .pillar-content h3 {
+    color: rgba(200,255,0,1);
+  }
+
+  .pillar:last-child {
+    border-bottom: none;
+  }
+
+  .pillar-meta {
+    padding: 5vh 3vw;
+    border-right: 2px solid var(--black);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .pillar-number {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    opacity: 0.3;
+    margin-bottom: 1rem;
+  }
+
+  .pillar-label {
+    font-family: var(--heading);
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+  }
+
+  .pillar-sublabel {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    opacity: 0.3;
+    margin-top: 0.5rem;
+  }
+
+  .pillar-content {
+    padding: 5vh 4vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .pillar-content h3 {
+    font-family: var(--heading);
+    font-size: clamp(1.6rem, 2.5vw, 2.4rem);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    letter-spacing: -0.02em;
+    transition: color 0.4s ease;
+  }
+
+  .pillar-content p {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.9;
+    max-width: 540px;
+    margin-bottom: 1.2rem;
+    opacity: 0.7;
+  }
+
+  .pillar-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  .pillar-content .pillar-accent {
+    font-family: var(--heading);
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 1;
+    margin-top: 1rem;
+  }
+
+  /* ─── SYMBIOTIC JOURNEY ─── */
+  .symbiotic {
+    background: var(--black);
+    color: var(--white);
+    border-bottom: 2px solid var(--white);
+  }
+
+  .symbiotic-header {
+    padding: 6vh 6vw 4vh;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4vw;
+    align-items: end;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .symbiotic-header.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .symbiotic-header h2 {
+    font-family: var(--heading);
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+
+  .sym-statement {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.8;
+    opacity: 0.5;
+    max-width: 400px;
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .principle-card {
+    border-right: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 4vh 3vw;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94), all 0.3s ease;
+    cursor: default;
+  }
+
+  .principle-card .p-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5em;
+  }
+
+  .principle-card .p-line {
+    font-family: var(--mono);
+    font-size: 11px;
+    opacity: 0.35;
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    transition: opacity 0.3s ease;
+  }
+
+  .principle-card:hover .p-line {
+    opacity: 0.7;
+  }
+
+  .principle-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .principle-card:hover {
+    background: rgba(200,255,0,0.06);
+  }
+
+  .principle-card:hover .p-name {
+    color: var(--accent);
+    transition: color 0.3s ease;
+  }
+
+  .principle-card:nth-child(3n) {
+    border-right: none;
+  }
+
+  .principle-card:nth-child(n+7) {
+    border-bottom: none;
+  }
+
+  .principle-card .p-number {
+    font-family: var(--mono);
+    font-size: 9px;
+    opacity: 0.2;
+  }
+
+  .principle-card .p-name {
+    font-family: var(--heading);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: color 0.3s ease;
+  }
+
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+  .reveal-delay-4 { transition-delay: 0.6s; }
+  .reveal-delay-5 { transition-delay: 0.75s; }
+  .reveal-delay-6 { transition-delay: 0.9s; }
+
+  /* ─── CLOSE ─── */
+  .close-section {
+    background: var(--white);
+    color: var(--black);
+    border-bottom: 2px solid var(--black);
+    padding: 16vh 6vw;
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .close-statement {
+    font-family: var(--heading);
+    font-size: clamp(3rem, 7vw, 7rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    margin-bottom: 5vh;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .close-statement.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .close-statement .grown {
+    color: var(--white);
+    background: var(--black);
+    padding: 0 0.15em;
+    display: inline;
+    position: relative;
+    transition: all 0.5s ease;
+  }
+
+  .close-statement:hover .grown {
+    background: var(--accent);
+    color: var(--black);
+    padding: 0 0.3em;
+  }
+
+  .close-philosophy {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.8;
+    max-width: 480px;
+    margin-bottom: 6vh;
+    opacity: 0;
+    opacity: 0.5;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .close-philosophy.visible {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+
+  .close-url {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    opacity: 0.25;
+    text-transform: uppercase;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    background: var(--black);
+    color: var(--white);
+    padding: 3vh 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    opacity: 0.25;
+    text-transform: uppercase;
+  }
+
+  /* ─── ACRONYM TEXT REVEAL ─── */
+  .acronym-section {
+    background: var(--black);
+    border-bottom: 2px solid var(--white);
+    padding: 12vh 6vw;
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .text-reveal {
+    position: relative;
+    min-height: 1.6em;
+    width: 100%;
+    max-width: none;
+  }
+
+  .text-reveal p {
+    display: none;
+    font-family: var(--heading);
+    font-size: clamp(1rem, 2.6vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.3;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+    word-spacing: 0.35em;
+  }
+
+  .text-reveal p span {
+    opacity: 0;
+    filter: blur(3px);
+    transform: translateY(2px);
+    transition: opacity 0.15s ease-out, filter 0.35s ease-out, transform 0.3s ease-out;
+    display: inline-block;
+  }
+
+  .text-reveal p span.ch-on {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0);
+  }
+
+  .text-reveal p .char-accent {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ─── GRAIN OVERLAY ─── */
+  .grain {
+    position: fixed;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    animation: grainShift 0.8s steps(1) infinite;
+  }
+
+  @keyframes grainShift {
+    0% { transform: translate(0,0); }
+    10% { transform: translate(-5%,-10%); }
+    20% { transform: translate(-15%,5%); }
+    30% { transform: translate(7%,-25%); }
+    40% { transform: translate(-5%,25%); }
+    50% { transform: translate(-15%,10%); }
+    60% { transform: translate(15%,0); }
+    70% { transform: translate(0,15%); }
+    80% { transform: translate(3%,35%); }
+    90% { transform: translate(-10%,10%); }
+  }
+
+  /* ─── SCROLL PROGRESS BAR ─── */
+  .scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    z-index: 200;
+    width: 0%;
+    transition: width 0.05s linear;
+  }
+
+  /* ─── SCROLL REVEAL ANIMATIONS ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.9s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+  .reveal-delay-4 { transition-delay: 0.6s; }
+  .reveal-delay-5 { transition-delay: 0.75s; }
+  .reveal-delay-6 { transition-delay: 0.9s; }
+
+  /* ─── CUSTOM CURSOR ─── */
+  @media (hover: hover) {
+    * { cursor: none !important; }
+    .cursor-dot {
+      position: fixed;
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10001;
+      mix-blend-mode: difference;
+      transition: width 0.2s, height 0.2s;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid rgba(200,255,0,0.5);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      mix-blend-mode: difference;
+      transition: width 0.3s, height 0.3s, border-color 0.3s;
+    }
+  }
+
+  @media (hover: none) {
+    .cursor-dot, .cursor-ring { display: none; }
+  }
+
+  /* ─── RESPONSIVE: TABLET ─── */
+  @media (max-width: 900px) {
+    .declaration-bar { font-size: 8px; padding: 10px 16px; flex-direction: column; gap: 4px; text-align: center; }
+    .ni-section { grid-template-columns: 1fr; }
+    .ni-left { border-right: none; border-bottom: 2px solid var(--black); padding: 8vh 5vw; }
+    .ni-right { padding: 8vh 5vw; }
+    .locations-grid { grid-template-columns: 1fr; }
+    .location-card { border-right: none; border-bottom: 2px solid var(--white); min-height: 50vh; }
+    .location-card:last-child { border-bottom: none; }
+    .principles-grid { grid-template-columns: 1fr 1fr; }
+    .pillar { grid-template-columns: 1fr; }
+    .pillar-meta { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.1); padding: 4vh 5vw 3vh; }
+    .pillar-content { padding: 4vh 5vw; }
+    .symbiotic-header { grid-template-columns: 1fr; gap: 3vh; }
+    .symbiotic-header h2 { font-size: clamp(2rem, 8vw, 3.5rem); }
+    .text-reveal { min-height: 4.5em; }
+    .manifesto { padding: 10vh 5vw; }
+    .manifesto-text { font-size: clamp(1.4rem, 3.5vw, 2.8rem); }
+    .philosophy { padding: 10vh 5vw; }
+    .close-section { padding: 12vh 5vw; }
+    .hero-marker { flex-direction: column; gap: 4px; text-align: center; }
+  }
+
+  /* ─── RESPONSIVE: MOBILE ─── */
+  @media (max-width: 600px) {
+    body { font-size: 13px; }
+    .declaration-bar { font-size: 7px; padding: 8px 12px; }
+    .hero { padding-top: 44px; }
+    .hero-wordmark { font-size: clamp(4rem, 18vw, 8rem); }
+    .hero-wordmark img { width: min(129vw, 690px); }
+    .hero-sub { font-size: 11px; letter-spacing: 0.8em; margin-top: 2rem; }
+    .hero-marker { padding: 12px 16px; font-size: 8px; flex-direction: column; gap: 4px; text-align: center; }
+    .section-label { padding: 12px 16px; font-size: 9px; }
+    .manifesto { padding: 8vh 5vw; }
+    .manifesto-text { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+    .manifesto-text p:last-child { font-size: clamp(0.85rem, 3.5vw, 1.1rem); }
+    .acronym-section { padding: 8vh 5vw; }
+    .text-reveal { min-height: 5em; font-size: clamp(1.2rem, 4.5vw, 2rem); }
+    .ni-section { grid-template-columns: 1fr; }
+    .ni-left { border-right: none; border-bottom: 2px solid var(--black); padding: 6vh 5vw; }
+    .ni-right { padding: 6vh 5vw; }
+    .ni-title-reveal p { font-size: clamp(2.5rem, 10vw, 4rem); }
+    .ni-declaration { font-size: clamp(1rem, 3.5vw, 1.4rem); }
+    .philosophy { padding: 8vh 5vw; }
+    .philosophy-text { font-size: clamp(1.1rem, 4vw, 1.6rem); }
+    .pillar { grid-template-columns: 1fr; min-height: auto; }
+    .pillar-meta { border-right: none; border-bottom: 1px solid rgba(0,0,0,0.1); padding: 4vh 5vw 3vh; }
+    .pillar-content { padding: 4vh 5vw; }
+    .pillar-content h3 { font-size: clamp(1rem, 3.5vw, 1.3rem); }
+    .pillar-content p { font-size: 13px; }
+    .locations-grid { grid-template-columns: 1fr; }
+    .location-card { border-right: none; border-bottom: 2px solid var(--white); min-height: 45vh; padding: 5vh 5vw; }
+    .location-card:last-child { border-bottom: none; }
+    .location-card .loc-name { font-size: clamp(1.6rem, 7vw, 2.5rem); }
+    .location-card .loc-provocation { font-size: 11px; max-width: none; }
+    .loc-bottom { font-size: 10px; }
+    .loc-data { flex-direction: column; gap: 2px; }
+    .symbiotic-header { grid-template-columns: 1fr; gap: 3vh; padding: 6vh 5vw; }
+    .symbiotic-header h2 { font-size: clamp(1.8rem, 8vw, 3rem); }
+    .sym-statement { font-size: 13px; }
+    .principles-grid { grid-template-columns: 1fr; }
+    .principle-card { padding: 3vh 5vw; border-right: none; }
+    .principle-card:nth-child(3n) { border-right: none; }
+    .principle-card:nth-child(n+7) { border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .principle-card:last-child { border-bottom: none; }
+    .principle-card .p-name { font-size: 12px; }
+    .principle-card .p-line { font-size: 11px; }
+    .close-section { padding: 10vh 5vw; }
+    .close-statement { font-size: clamp(2rem, 8vw, 4rem); }
+    .close-philosophy { font-size: clamp(0.85rem, 3vw, 1rem); }
+    .footer { padding: 16px; font-size: 9px; flex-direction: column; gap: 6px; text-align: center; }
+    .media-divider { width: 100%; aspect-ratio: 16 / 9; height: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="scroll-progress"></div>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<!-- ━━━ DECLARATION BAR ━━━ -->
+<div class="declaration-bar">
+  <div class="dec-left">Aura is a regenerative life ecosystem. Realized through 3△spaces. (I) Sanctuary, (II) Agroculture, (III) Artistry — all grown as one.</div>
+  <div class="dec-right">theaura.life</div>
+</div>
+
+<!-- ━━━ HERO ━━━ -->
+<section class="hero">
+  <video class="hero-bg-video" autoplay muted loop playsinline preload="auto">
+    <source src="Final/02_A01.mp4" type="video/mp4">
+  </video>
+  <div class="hero-wordmark"><img src="Final/01_Logo.svg" alt="AURA"></div>
+  <div class="hero-sub">L I F E</div>
+  <div class="hero-marker">
+    <span>△ THE 1000-YEAR IDEA</span>
+    <span>#GENERATIONALIMPACT</span>
+    <span>2026</span>
+  </div>
+</section>
+
+<!-- ━━━ LABEL ━━━ -->
+<div class="section-label">
+  <span>DECLARATION</span>
+  <span>△</span>
+</div>
+
+<!-- ━━━ GENERATIONAL IMPACT ━━━ -->
+<section class="manifesto">
+  <div class="manifesto-text reveal">
+    <p>Aura is a regenerative ecosystem for monastic polymaths where Ancestral Intelligence and Creative Capital are deployed across 1000 year ideas.</p>
+    <p>The choices made by one generation shape a thousand that follow.</p>
+  </div>
+</section>
+
+<!-- ━━━ AURA ACRONYM ━━━ -->
+<section class="acronym-section">
+  <div class="text-reveal">
+    <p>Ancestral Understanding Regenerative Architecture</p>
+    <p>Activating Unified Radical Ambition</p>
+    <p>Ancestral Urgency Regenerative Activation</p>
+    <p>Ancestral Undercurrents Radical Architecture</p>
+    <p>Activating Uncommon Rooted Abundance</p>
+  </div>
+</section>
+
+<!-- ━━━ MEDIA DIVIDER ━━━ -->
+<section class="media-divider">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="Final/03_A02.mp4" type="video/mp4">
+  </video>
+</section>
+
+<!-- ━━━ NATURAL INTELLIGENCE ━━━ -->
+<section class="ni-section">
+  <div class="ni-left">
+    <div class="ni-title-reveal">
+      <p>AUGMENTED<br>INTELLIGENCE.</p>
+      <p>ANCESTRAL<br>INTELLIGENCE.</p>
+      <p>ANCIENT<br>INTELLIGENCE.</p>
+      <p>NATURAL<br>INTELLIGENCE.</p>
+    </div>
+  </div>
+  <div class="ni-right">
+    <ul class="ni-capabilities">
+      <li><span class="cap-num">01</span>Pattern recognition.</li>
+      <li><span class="cap-num">02</span>Systems thinking.</li>
+      <li><span class="cap-num">03</span>Moral filter.</li>
+      <li><span class="cap-num">04</span>Taste.</li>
+      <li><span class="cap-num">05</span>Capital intelligence.</li>
+      <li><span class="cap-num">06</span>Long-horizon thinking.</li>
+    </ul>
+    <div class="ni-declaration reveal">
+      You are not the machine.<br>
+      You are <span class="highlight">its architect</span>.
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ LABEL ━━━ -->
+<div class="section-label">
+  <span>PHILOSOPHY</span>
+  <span>△</span>
+</div>
+
+<!-- ━━━ PHILOSOPHY ━━━ -->
+<section class="philosophy">
+  <div class="philosophy-text reveal">
+    Aura is the practice of remembering — a quiet revolution that knows the earth is already wise.
+  </div>
+</section>
+
+<!-- ━━━ MEDIA DIVIDER ━━━ -->
+<section class="media-divider">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="Final/04_A03.mp4" type="video/mp4">
+  </video>
+</section>
+
+<!-- ━━━ THREE PILLARS ━━━ -->
+<section class="pillars">
+
+  <!-- (I) SANCTUARY -->
+  <div class="pillar reveal">
+    <div class="pillar-meta">
+      <div class="pillar-number">(I)</div>
+      <div class="pillar-label">Sanctuary</div>
+      <div class="pillar-sublabel">The Regenerative Land</div>
+    </div>
+    <div class="pillar-content">
+      <h3>Volcanic soil. Sensor networks. Sacred ground.</h3>
+      <p>pH balanced between 6.0 and 6.5 — mapped in real-time by environmental AI. Drone telemetry overlays 150 acres of UNESCO biodiversity. The mountain's data and the mountain's wisdom — processed as one system.</p>
+      <p>Satellite monitoring reads monsoon rhythm. Soil moisture sensors calibrate irrigation to the hour. Ancient terrain — newly legible.</p>
+      <p class="pillar-accent">Humans are not owners — only architects of the terrain.</p>
+    </div>
+  </div>
+
+  <!-- (II) AGROCULTURE -->
+  <div class="pillar reveal reveal-delay-2">
+    <div class="pillar-meta">
+      <div class="pillar-number">(II)</div>
+      <div class="pillar-label">Agroculture</div>
+      <div class="pillar-sublabel">The Practice & Produce</div>
+    </div>
+    <div class="pillar-content">
+      <h3>Robotics beneath the canopy. Precision meets ancestral practice.</h3>
+      <p>Machine learning trained on monsoon cycles and soil chemistry. Automated systems deployed between rows — not replacing hands, extending them. Cover crops and computer vision govern the same ground.</p>
+      <p>Eighty percent of effort feeds the land through plantation. The remaining twenty cultivates human and machine capability.</p>
+      <p class="pillar-accent">Where algorithm meets ancestry — cultivation becomes intelligence.</p>
+    </div>
+  </div>
+
+  <!-- (III) ARTISTRY -->
+  <div class="pillar reveal reveal-delay-3">
+    <div class="pillar-meta">
+      <div class="pillar-number">(III)</div>
+      <div class="pillar-label">Artistry</div>
+      <div class="pillar-sublabel">The Creative Residency</div>
+    </div>
+    <div class="pillar-content">
+      <h3>Computational labs. Material science. AI as collaborator.</h3>
+      <p>Fabrication workshops for robotics prototyping and biomaterial research. Residency programmes where neural networks inform textile design — code meets clay, soil meets silicon.</p>
+      <p>Creative capital deployed where ancient practice meets emerging technology. Every discipline earns its place through experimentation.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ━━━ LABEL ━━━ -->
+<div class="section-label">
+  <span>THE REGENERATIVE LAND</span>
+  <span>3 LOCATIONS</span>
+</div>
+
+<!-- ━━━ LOCATIONS ━━━ -->
+<section class="locations">
+  <div class="locations-grid">
+    <!-- Mudigree -->
+    <div class="location-card">
+      <div class="loc-image" style="background-image:url('data:image/jpeg;base64,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')"></div>
+      <div>
+        <div class="loc-wordmark">AURA</div>
+        <div class="loc-name">Mudigree</div>
+        <div class="loc-region">Western Ghats, India</div>
+        <div class="loc-provocation">150 acres of UNESCO biodiversity. Sensor-mapped. Sacred.</div>
+      </div>
+      <div class="loc-bottom">
+        <div class="loc-coords">13.1365° N, 75.6403° E</div>
+        <div class="loc-data">
+          <span>Altitude: 3600 ft</span>
+          <span>Humidity: 58%</span>
+          <span>Wind: 5 km/h</span>
+        </div>
+        <div class="loc-temp">14°C <span class="temp-dash">—</span> 30°C</div>
+      </div>
+    </div>
+    <!-- Ohara -->
+    <div class="location-card">
+      <div class="loc-image" style="background-image:url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCAHPAfQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDiPLzznFOAA4Ap3pSGs7lCFaTggjGDinDB/wAilwMHGP0ouBCVGKcgIPUYpWHrj8MUBOcg/rTuA4qD6UgQU7nPT9RSnkD1/ClcBjAgcfyqLBJ96nxkUmAvQUXEQgcipSoPFO47gfpSe1KkAjgn9aRBxQelAD1J/BPWo3Jl3AjvSPkKm5pg5oop+h4oAJuA4p2r1pPypp2/KlBxxQA2kpxNBOGWnU0hoA7A4o3Ul+FgfpUUkP04py+p5NNZh//Z')"></div>
+      <div>
+        <div class="loc-wordmark">AURA</div>
+        <div class="loc-name">Ohara</div>
+        <div class="loc-region">Kyoto, Japan</div>
+        <div class="loc-provocation">1000 years of monastic discipline. Recalibrated for the polymath era.</div>
+      </div>
+      <div class="loc-bottom">
+        <div class="loc-coords">35.2375° N, 140.3947° E</div>
+        <div class="loc-data">
+          <span>Altitude: 1099 ft</span>
+          <span>Humidity: 64%</span>
+          <span>Wind: 14 km/h</span>
+        </div>
+        <div class="loc-temp">7°C <span class="temp-dash">—</span> 28°C</div>
+      </div>
+    </div>
+    <!-- Munduk -->
+    <div class="location-card">
+      <div class="loc-image" style="background-image:url('data:image/jpeg;base64,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')"></div>
+      <div>
+        <div class="loc-wordmark">AURA</div>
+        <div class="loc-name">Munduk</div>
+        <div class="loc-region">Bali, Indonesia</div>
+        <div class="loc-provocation">Volcanic terroir. Living laboratories. Where the land does the thinking.</div>
+      </div>
+      <div class="loc-bottom">
+        <div class="loc-coords">8.2666° S, 115.0547° E</div>
+        <div class="loc-data">
+          <span>Altitude: 2400 ft</span>
+          <span>Humidity: 85–90%</span>
+          <span>Wind: 3 km/h</span>
+        </div>
+        <div class="loc-temp">22°C <span class="temp-dash">—</span> 28°C</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ MEDIA DIVIDER ━━━ -->
+<section class="media-divider">
+  <video autoplay muted loop playsinline preload="auto">
+    <source src="Final/05_A04.mp4" type="video/mp4">
+  </video>
+</section>
+
+<!-- ━━━ SYMBIOTIC JOURNEY ━━━ -->
+<section class="symbiotic">
+  <div class="symbiotic-header reveal">
+    <h2>The Polymath<br>Era</h2>
+    <p class="sym-statement">AI collapses silos. The monastic polymath re-emerges — systems thinker, behavioral scientist, financial architect, cultural translator. Fluent in land and code. They converge here not to retreat, but to prototype the next thousand years.</p>
+  </div>
+  <div class="principles-grid">
+    <div class="principle-card reveal reveal-delay-1">
+      <div class="p-header"><span class="p-number">(I)</span><span class="p-name">Regenerative</span></div>
+      <span class="p-line">Every output feeds the next input.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-2">
+      <div class="p-header"><span class="p-number">(II)</span><span class="p-name">Biodynamic</span></div>
+      <span class="p-line">Farming as a closed-loop operating system.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-3">
+      <div class="p-header"><span class="p-number">(III)</span><span class="p-name">Vedic</span></div>
+      <span class="p-line">Knowledge systems older than the institutions that study them.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-4">
+      <div class="p-header"><span class="p-number">(IV)</span><span class="p-name">Ancestral</span></div>
+      <span class="p-line">The original dataset. Still unmatched.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-5">
+      <div class="p-header"><span class="p-number">(V)</span><span class="p-name">Biophilic</span></div>
+      <span class="p-line">Architecture that breathes, grows, responds.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-6">
+      <div class="p-header"><span class="p-number">(VI)</span><span class="p-name">Biomimicry</span></div>
+      <span class="p-line">Nature's R&amp;D — 3.8 billion years in production.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-1">
+      <div class="p-header"><span class="p-number">(VII)</span><span class="p-name">Labs</span></div>
+      <span class="p-line">Where silicon meets soil. Prototyping at the edge.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-2">
+      <div class="p-header"><span class="p-number">(VIII)</span><span class="p-name">Artist-in-Residence</span></div>
+      <span class="p-line">Code meets clay. Neural networks meet textile.</span>
+    </div>
+    <div class="principle-card reveal reveal-delay-3">
+      <div class="p-header"><span class="p-number">(IX)</span><span class="p-name">Gurukul</span></div>
+      <span class="p-line">One teacher. One student. Infinite transfer.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ━━━ FOOTER ━━━ -->
+<footer class="footer">
+  <div>AURA LIFE △ 2026</div>
+  <div>#GENERATIONALIMPACT</div>
+  <div>THEAURA.LIFE</div>
+</footer>
+
+<script>
+(function() {
+  // ─── Orphan control for long copy ───
+  function tieLastWords(selector) {
+    var nodes = document.querySelectorAll(selector);
+    nodes.forEach(function(node) {
+      // Skip animated text systems that are character-split later.
+      if (node.closest('.text-reveal') || node.closest('.ni-title-reveal')) return;
+      // Apply only to simple text blocks to avoid altering nested markup structure.
+      if (node.children.length > 0) return;
+      var txt = node.textContent.trim();
+      if (!txt) return;
+      node.textContent = txt.replace(/\s+([^\s]+)\s*$/, '\u00A0$1');
+    });
+  }
+
+  tieLastWords(
+    '.manifesto-text p, .pillar-content p, .sym-statement, .philosophy-text, .location-card .loc-provocation, .ni-declaration'
+  );
+
+  // ─── Character reveal engine ───
+  // Shuffle helper
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  function initTextReveal(selector, opts) {
+    var container = document.querySelector(selector);
+    if (!container) return;
+    var paragraphs = Array.from(container.querySelectorAll('p'));
+    var currentIndex = 0;
+    var revealWindow = opts.revealWindow || 1200;
+    var fadeWindow = opts.fadeWindow || 800;
+    var holdDuration = opts.holdDuration || 2500;
+    var randomReveal = opts.randomReveal || false;
+    var accentFn = opts.accentFn || null;
+
+    // Split text into character spans — preserve <br> tags
+    paragraphs.forEach(function(p) {
+      var html = p.innerHTML;
+      var result = '';
+      var inTag = false;
+      for (var i = 0; i < html.length; i++) {
+        if (html[i] === '<') { inTag = true; result += html[i]; continue; }
+        if (html[i] === '>') { inTag = false; result += html[i]; continue; }
+        if (inTag) { result += html[i]; continue; }
+        var cls = accentFn ? accentFn(html, i) : '';
+        result += '<span' + (cls ? ' class="' + cls + '"' : '') + '>' + html[i] + '</span>';
+      }
+      p.innerHTML = result;
+    });
+
+    // Biological timing — characters arrive in organic bursts
+    // like neural firing: cluster → pause → cluster → pause
+    function biologicalDelays(count, totalMs) {
+      var delays = [];
+      var t = 0;
+      for (var i = 0; i < count; i++) {
+        // Base inter-character gap with organic variance
+        var base = totalMs / count;
+        // Perlin-like clustering: sine wave creates breathing rhythm
+        var wave = Math.sin((i / count) * Math.PI * 3.5) * 0.6;
+        // Random jitter per character (±40% of base)
+        var jitter = (Math.random() - 0.5) * base * 0.8;
+        // Occasional longer pause (~15% chance) simulates synaptic gap
+        var pause = Math.random() < 0.15 ? base * (1.2 + Math.random() * 1.5) : 0;
+        var gap = Math.max(8, base * (1 + wave) + jitter + pause);
+        t += gap;
+        delays.push(t);
+      }
+      // Normalize to fit within totalMs
+      var scale = totalMs / t;
+      return delays.map(function(d) { return d * scale; });
+    }
+
+    function revealPhrase(index) {
+      paragraphs.forEach(function(p) { p.style.display = 'none'; });
+      var p = paragraphs[index];
+      p.style.display = 'block';
+      var spans = Array.from(p.querySelectorAll('span'));
+      spans.forEach(function(s) { s.classList.remove('ch-on'); });
+
+      // Assign random order with biological timing
+      var order = randomReveal ? shuffle(spans.map(function(_, i) { return i; })) : spans.map(function(_, i) { return i; });
+      var delays = biologicalDelays(spans.length, revealWindow);
+      order.forEach(function(origIdx, schedIdx) {
+        setTimeout(function() {
+          // Vary each character's transition speed for organic feel
+          var dur = (0.1 + Math.random() * 0.2).toFixed(2);
+          var blurDur = (0.25 + Math.random() * 0.2).toFixed(2);
+          spans[origIdx].style.transition = 'opacity ' + dur + 's ease-out, filter ' + blurDur + 's ease-out, transform ' + blurDur + 's ease-out';
+          spans[origIdx].classList.add('ch-on');
+        }, delays[schedIdx]);
+      });
+
+      // Fade out with biological timing too
+      setTimeout(function() {
+        var fadeOrder = randomReveal ? shuffle(spans.map(function(_, i) { return i; })) : spans.map(function(_, i) { return i; });
+        var fadeDelays = biologicalDelays(spans.length, fadeWindow);
+        fadeOrder.forEach(function(origIdx, schedIdx) {
+          setTimeout(function() {
+            var dur = (0.08 + Math.random() * 0.15).toFixed(2);
+            spans[origIdx].style.transition = 'opacity ' + dur + 's ease-in, filter 0.2s ease-in, transform 0.2s ease-in';
+            spans[origIdx].classList.remove('ch-on');
+          }, fadeDelays[schedIdx]);
+        });
+        setTimeout(function() {
+          currentIndex = (currentIndex + 1) % paragraphs.length;
+          revealPhrase(currentIndex);
+        }, fadeWindow + 400);
+      }, revealWindow + holdDuration);
+    }
+
+    revealPhrase(0);
+  }
+
+  // ─── AURA acronym cycling — random character reveal ───
+  initTextReveal('.text-reveal', {
+    revealWindow: 1200,
+    fadeWindow: 800,
+    holdDuration: 2500,
+    randomReveal: true,
+    accentFn: function(html, i) {
+      var prevChar = i > 0 ? html[i - 1] : '';
+      var isWordStart = (i === 0 || prevChar === ' ' || prevChar === '>' || prevChar === ',');
+      var c = html[i];
+      if (isWordStart && c.match && c.match(/[A-Z]/)) return 'char-accent';
+      return '';
+    }
+  });
+
+  // ─── NI title cycling — random character reveal ───
+  initTextReveal('.ni-title-reveal', {
+    revealWindow: 1400,
+    fadeWindow: 900,
+    holdDuration: 3000,
+    randomReveal: true
+  });
+
+  // ─── Scroll Progress Bar ───
+  var progressBar = document.querySelector('.scroll-progress');
+  window.addEventListener('scroll', function() {
+    var scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    if (progressBar) progressBar.style.width = scrolled + '%';
+  });
+
+  // ─── IntersectionObserver for scroll reveals ───
+  var revealElements = document.querySelectorAll('.reveal, .section-label');
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  revealElements.forEach(function(el) { revealObserver.observe(el); });
+
+  // ─── Manifesto paragraph stagger ───
+  var manifestoPs = document.querySelectorAll('.manifesto-text p');
+  var manifestoObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var ps = entry.target.querySelectorAll('p');
+        ps.forEach(function(p, i) {
+          setTimeout(function() { p.classList.add('visible'); }, i * 400);
+        });
+      }
+    });
+  }, { threshold: 0.2 });
+  var manifestoEl = document.querySelector('.manifesto-text');
+  if (manifestoEl) manifestoObserver.observe(manifestoEl);
+
+  // ─── Hero parallax on scroll ───
+  var heroWordmark = document.querySelector('.hero-wordmark');
+  var heroSub = document.querySelector('.hero-sub');
+  window.addEventListener('scroll', function() {
+    var scroll = window.scrollY;
+    var vh = window.innerHeight;
+    if (scroll < vh && heroWordmark) {
+      var progress = scroll / vh;
+      var scale = 1 + progress * 0.15;
+      var opacity = 1 - progress * 1.2;
+      heroWordmark.style.transform = 'scale(' + scale + ')';
+      heroWordmark.style.opacity = Math.max(0, opacity);
+    }
+  });
+
+  // Media divider videos render without cropping on desktop.
+
+  // ─── Custom Cursor ───
+  var cursorDot = document.querySelector('.cursor-dot');
+  var cursorRing = document.querySelector('.cursor-ring');
+  if (cursorDot && cursorRing && window.matchMedia('(hover: hover)').matches) {
+    var mouseX = 0, mouseY = 0;
+    var dotX = 0, dotY = 0, ringX = 0, ringY = 0;
+    document.addEventListener('mousemove', function(e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+    function animCursor() {
+      dotX += (mouseX - dotX) * 0.25;
+      dotY += (mouseY - dotY) * 0.25;
+      ringX += (mouseX - ringX) * 0.1;
+      ringY += (mouseY - ringY) * 0.1;
+      cursorDot.style.transform = 'translate(' + (dotX - 3) + 'px,' + (dotY - 3) + 'px)';
+      cursorRing.style.transform = 'translate(' + (ringX - 18) + 'px,' + (ringY - 18) + 'px)';
+      requestAnimationFrame(animCursor);
+    }
+    animCursor();
+  } else {
+    if (cursorDot) cursorDot.style.display = 'none';
+    if (cursorRing) cursorRing.style.display = 'none';
+  }
+
+  // ─── NI Capabilities stagger reveal ───
+  var niList = document.querySelector('.ni-capabilities');
+  if (niList) {
+    var niObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var items = entry.target.querySelectorAll('li');
+          items.forEach(function(li, i) {
+            li.style.opacity = '0';
+            li.style.transform = 'translateX(30px)';
+            li.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            setTimeout(function() {
+              li.style.opacity = '1';
+              li.style.transform = 'translateX(0)';
+            }, i * 120);
+          });
+          niObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    niObserver.observe(niList);
+  }
+})();
+</script>
+
+</body>
+</html>
